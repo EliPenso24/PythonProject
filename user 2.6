@@ -1,0 +1,25 @@
+import socket
+from gc import get_referents
+
+MAX_PACKET = 1024
+
+my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+try:
+    Action = input("enter action")
+
+    my_socket.connect(('127.0.0.1', 8080))
+
+    my_socket.send(Action.encode())
+
+    response = my_socket.recv(MAX_PACKET).decode()
+
+    print(response)
+
+except socket.error as err:
+
+    print('received socket error' + str(err))
+
+finally:
+
+    my_socket.close()
