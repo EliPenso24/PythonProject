@@ -3,24 +3,28 @@ import socket
 MAX_PACKET = 1024
 
 
-Action = None
+def main():
+    Action = None
+    while (Action!="EXIT"):
+        my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-while (Action!="EXIT"):
-    my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            Action = input("enter action").upper()
 
-    try:
-        Action = input("enter action").upper()
+            my_socket.connect(('127.0.0.1', 1002))
 
-        my_socket.connect(('127.0.0.1', 1002))
+            my_socket.send(Action.encode())
 
-        my_socket.send(Action.encode())
+            response = my_socket.recv(MAX_PACKET).decode()
 
-        response = my_socket.recv(MAX_PACKET).decode()
+            print(response)
 
-        print(response)
+        except socket.error as err:
 
-    except socket.error as err:
+            print('received socket error' + str(err))
+        finally:
+            my_socket.close()
 
-        print('received socket error' + str(err))
-    finally:
-        my_socket.close()
+
+if __name__ == '__main__':
+    main()
