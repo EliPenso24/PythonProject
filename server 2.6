@@ -1,3 +1,18 @@
+"""
+Server program that communicates with a client using the TCP protocol.
+The server listens for incoming connections and responds to specific commands:
+    - "EXIT" → Sends a disconnection message.
+    - "NAME" → Sends a predefined response ("PARAKALO").
+    - "RAND" → Sends a random integer between 1 and 10.
+    - "TIME" → Sends the current system time.
+    - Any other input → Returns "Illegal action".
+
+All server activity is logged for monitoring and debugging purposes.
+
+Author: [Eli Penso]
+Date: [31.10.25]
+Version: 1.0
+"""
 import socket
 import random
 import datetime
@@ -10,17 +25,54 @@ QUEUE_LEN = 1
 MODE = None
 
 
+"""
+Creates a logs directory and configures the logging system for the program.
+
+Parameters:
+     None
+
+Returns:
+    None
+"""
 def createlogs():
     os.makedirs("logsserver", exist_ok=True)
     logging.basicConfig(filename='logsserver/program.log', filemode='w', level=logging.INFO)
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 
+"""
+Generates and returns a random integer between 1 and 10 (inclusive).
+
+Parameters:
+    None
+
+Returns:
+    int: A random integer in the range [1, 10].
+"""
 def rand():
     x = random.randint(1, 10)
     return x
 
 
+
+"""    
+Main function of the server program.
+Creates and configures a TCP socket, listens for incoming client connections,
+and handles client requests based on the command received.
+
+Supported commands:
+    - EXIT: Closes the client connection.
+    - NAME: Responds with a predefined string.
+    - RAND: Sends a randomly generated integer between 1 and 10.
+    - TIME: Sends the current date and time.
+    - Otherwise: Sends an "Illegal action" message.
+
+Parameters:
+    None
+
+Returns:
+    None
+"""
 def main():
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     logging.info("Socket created")
