@@ -1,47 +1,79 @@
 import socket
 import random
 import datetime
+import os
+import logging
+
 
 MAX_PACKET = 1024
 QUEUE_LEN = 1
-mode = None
+MODE = None
+
+
+def createlogs():
+    os.makedirs("logsserver", exist_ok=True)
+    logging.basicConfig(filename='logsserver/program.log', filemode='w', level=logging.INFO)
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+
+def rand():
+    x = random.randint(1, 10)
+    return x
+
 
 def main():
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    logging.info("Socket created")
     my_socket.bind(('0.0.0.0', 1002))
+    logging.info("Socket binded")
     my_socket.listen(QUEUE_LEN)
+    logging.info("Socket listening")
 
     while True:
         try:
             client_socket, client_address = my_socket.accept()
+            logging.info("Client connected")
             try:
                 request = client_socket.recv(MAX_PACKET).decode().strip()
+                logging.info("Received request: {}".format(request))
 
                 if request == 'EXIT':
                     client_socket.sendall("Cutting Contact".encode())
+                    logging.info("Client disconnected")
                 elif request == 'NAME':
                     client_socket.sendall("PARAKALO".encode())
+                    logging.info("Client disconnected")
                 elif request == 'RAND':
-                    x = random.randint(1, 10)
+                    x = rand()
+                    logging.info("Random number generated: {}".format(x))
                     text = str(x)
+                    logging.info("Random number generated: {}".format(text))
                     client_socket.sendall(text.encode())
+                    logging.info("Client disconnected")
                 elif request == 'TIME':
                     now = datetime.datetime.now()
+                    logging.info("Current time: {}".format(now))
                     text = str(now)
+                    logging.info("Current time: {}".format(text))
                     client_socket.sendall(text.encode())
+                    logging.info("Client disconnected")
                 else:
                     client_socket.sendall("Illegal action".encode())
+                    logging.info("Client disconnected")
 
             except socket.error as e:
                 print(e)
+                logging.info("Client disconnected")
             finally:
                 client_socket.close()
+                logging.info("Client disconnected")
 
         except socket.error as e:
             print(e)
+            logging.info("Client disconnected")
+
 
 if __name__ == '__main__':
+    assert rand()<11 and rand()>0
+    createlogs()
     main()
-
-    except socket.error as e:
-        print(e)
