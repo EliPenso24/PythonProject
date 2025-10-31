@@ -1,6 +1,15 @@
 import socket
+import os
+import logging
 
 MAX_PACKET = 1024
+
+
+def createlogs():
+    os.makedirs("logsuser", exist_ok=True)
+    logging.basicConfig(filename='logsuser/program.log', filemode='w', level=logging.INFO)
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
 
 
 def main():
@@ -10,21 +19,24 @@ def main():
 
         try:
             Action = input("enter action").upper()
-
+            logging.info("recieved action")
             my_socket.connect(('127.0.0.1', 1002))
-
+            logging.info("connected to server")
             my_socket.send(Action.encode())
-
+            logging.info("sent action")
             response = my_socket.recv(MAX_PACKET).decode()
-
+            logging.info("recieved response")
             print(response)
 
         except socket.error as err:
 
             print('received socket error' + str(err))
+            logging.error("socket error")
         finally:
             my_socket.close()
+            logging.info("closing socket")
 
 
 if __name__ == '__main__':
+    createlogs()
     main()
