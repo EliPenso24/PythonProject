@@ -1,3 +1,12 @@
+"""
+Client program that communicates with a server using the TCP protocol.
+The program takes user input, sends it to the server, and prints the received response.
+Additionally, it logs various actions for debugging and monitoring purposes.
+
+Author: [Eli Penso]
+Date: [31.10.25]
+Version: 1.0
+"""
 import socket
 import os
 import logging
@@ -5,13 +14,33 @@ import logging
 MAX_PACKET = 1024
 
 
+"""
+Creates a logs directory and configures the logging system for the program.
+
+Parameters:
+     None
+
+Returns:
+    None
+"""
 def createlogs():
     os.makedirs("logsuser", exist_ok=True)
     logging.basicConfig(filename='logsuser/program.log', filemode='w', level=logging.INFO)
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 
+"""
+Main function of the program.
+Establishes a TCP connection to the server, sends user-input commands,
+receives and prints the server's response, and logs the process.
+The loop continues until the user enters "EXIT".
 
+ Parameters:
+    None
+
+Returns:
+    None
+ """
 def main():
     Action = None
     while (Action!="EXIT"):
